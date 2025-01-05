@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 	"os"
 )
 
@@ -12,4 +13,13 @@ func main() {
 	}
 	url := os.Args[1]
 	fmt.Println("Sending request to " + url)
+
+	res, err := http.Get(url)
+
+	if err != nil {
+		fmt.Println("Response error")
+		os.Exit(1)
+	}
+
+	fmt.Println(res)
 }
