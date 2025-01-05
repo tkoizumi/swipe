@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"net/http"
 	"os"
+	request "swipe/internal/core"
 )
 
 func main() {
@@ -12,14 +12,9 @@ func main() {
 		os.Exit(1)
 	}
 	url := os.Args[1]
-	fmt.Println("Sending request to " + url)
-
-	res, err := http.Get(url)
-
-	if err != nil {
-		fmt.Println("Response error")
-		os.Exit(1)
-	}
+	fmt.Println("Sending request to " + url + "\n")
+	req := request.Create(url)
+	res := req.Get()
 
 	fmt.Println(res)
 }
