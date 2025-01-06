@@ -3,7 +3,8 @@ package main
 import (
 	"fmt"
 	"os"
-	request "swipe/internal/core"
+	request "swipe/internal/core/request"
+	response "swipe/internal/core/response"
 )
 
 func main() {
@@ -14,7 +15,9 @@ func main() {
 	url := os.Args[1]
 	fmt.Println("Sending request to " + url + "\n")
 	req := request.Create(url)
-	res := req.Get()
+	r, e := req.Get()
 
-	fmt.Println(res)
+	res := response.Create(r, e)
+	res.Print()
+
 }
