@@ -13,7 +13,7 @@ func main() {
 		os.Exit(1)
 	}
 	url := os.Args[1]
-	fmt.Println("Sending request to " + url + "\n")
+
 	req := request.Create(url)
 	r, e := req.Get()
 
