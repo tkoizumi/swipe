@@ -20,8 +20,13 @@ func main() {
 	queryParams := []string{}
 
 	for i, arg := range os.Args {
-		if arg == "-q" && len(os.Args) > i {
-			queryParams = append(queryParams, os.Args[i+1])
+		if arg == "-q" {
+			if len(os.Args) > (i + 1) {
+				queryParams = append(queryParams, os.Args[i+1])
+			} else {
+				fmt.Println("Missing query param")
+				os.Exit(1)
+			}
 		}
 	}
 
