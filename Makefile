@@ -6,6 +6,9 @@ MAIN_FILE = $(CMD_DIR)/main.go
 TARGET_DIR = $(HOME)/.local/bin
 INSTALL_DIR = $(TARGET_DIR)/$(BINARY_NAME)
 
+# Build and run the project
+all: build install
+
 build:
 	@echo "Building the project..."
 	mkdir -p $(BIN_DIR)
@@ -27,5 +30,3 @@ clean:
 	@echo "Cleaning up..."
 	rm -rf $(BIN_DIR)
 
-# Build and run the project
-all: build install run
