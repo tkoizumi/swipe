@@ -14,7 +14,7 @@ func Create(url string) *request {
 }
 
 func (r request) Get() (*http.Response, error) {
-	fmt.Println("Sending Get request to " + r.URL + "\n")
+	fmt.Println("Sending GET request to " + r.URL + "\n")
 	res, err := http.Get(r.URL)
 	return res, err
 }

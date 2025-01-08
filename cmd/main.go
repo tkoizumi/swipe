@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	flags "swipe/internal/core/flags"
 	request "swipe/internal/core/request"
 	response "swipe/internal/core/response"
 )
@@ -17,22 +18,12 @@ func main() {
 	baseUrl := os.Args[1]
 	urlArr := []string{baseUrl}
 
-	queryParams := []string{}
+	qFlag := flags.Create("q")
+	qFlag.Parse(os.Args)
 
-	for i, arg := range os.Args {
-		if arg == "-q" {
-			if len(os.Args) > (i + 1) {
-				queryParams = append(queryParams, os.Args[i+1])
-			} else {
-				fmt.Println("Missing query param")
-				os.Exit(1)
-			}
-		}
-	}
-
-	if len(queryParams) != 0 {
+	if len(qFlag.Values) != 0 {
 		urlArr = append(urlArr, "?")
-		for _, p := range queryParams {
+		for _, p := range qFlag.Values {
 			urlArr = append(urlArr, p)
 			urlArr = append(urlArr, "&")
 		}
