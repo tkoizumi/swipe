@@ -15,8 +15,8 @@ func main() {
 	}
 
 	baseUrl := os.Args[1]
-	flagArr := []flags.Flag{}
 
+	flagArr := []flags.Flag{}
 	qFlag := flags.Create("q")
 	qFlag.Parse(os.Args)
 	flagArr = append(flagArr, *qFlag)
