@@ -5,16 +5,16 @@ import (
 	"os"
 )
 
-type flag struct {
+type Flag struct {
 	Name   string
 	Values []string
 }
 
-func Create(name string) *flag {
-	return &flag{Name: name}
+func Create(name string) *Flag {
+	return &Flag{Name: name, Values: []string{}}
 }
 
-func (f *flag) Parse(args []string) {
+func (f *Flag) Parse(args []string) {
 	queryParams := []string{}
 	flag := "-" + f.Name
 

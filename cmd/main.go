@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"strings"
 	flags "swipe/internal/core/flags"
 	request "swipe/internal/core/request"
 	response "swipe/internal/core/response"
@@ -16,23 +15,13 @@ func main() {
 	}
 
 	baseUrl := os.Args[1]
-	urlArr := []string{baseUrl}
+	flagArr := []flags.Flag{}
 
 	qFlag := flags.Create("q")
 	qFlag.Parse(os.Args)
+	flagArr = append(flagArr, *qFlag)
 
-	if len(qFlag.Values) != 0 {
-		urlArr = append(urlArr, "?")
-		for _, p := range qFlag.Values {
-			urlArr = append(urlArr, p)
-			urlArr = append(urlArr, "&")
-		}
-		urlArr = urlArr[:len(urlArr)-1]
-	}
-
-	url := strings.Join(urlArr, "")
-
-	req := request.Create(url)
+	req := request.Create(baseUrl, flagArr)
 	r, e := req.Get()
 
 	res := response.Create(r, e)
