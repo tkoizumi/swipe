@@ -14,7 +14,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	baseUrl := os.Args[1]
+	baseUrl := GetUrl(os.Args)
 
 	reqFlagArr := []flags.Flag{}
 	qFlag := flags.Create("q")

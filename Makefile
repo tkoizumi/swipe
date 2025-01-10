@@ -2,6 +2,7 @@ BINARY_NAME = swipe
 BIN_DIR = bin
 CMD_DIR = cmd
 MAIN_FILE = $(CMD_DIR)/main.go
+UTILS_FILE = $(CMD_DIR)/utils.go
 
 TARGET_DIR = $(HOME)/.local/bin
 INSTALL_DIR = $(TARGET_DIR)/$(BINARY_NAME)
@@ -12,7 +13,7 @@ all: build install
 build:
 	@echo "Building the project..."
 	mkdir -p $(BIN_DIR)
-	go build -o $(BIN_DIR)/$(BINARY_NAME) $(MAIN_FILE)
+	go build -o $(BIN_DIR)/$(BINARY_NAME) $(MAIN_FILE) $(UTILS_FILE)
 
 run: build
 	@echo "Running the project..."
