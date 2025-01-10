@@ -31,7 +31,7 @@ func Create(url string, flagArr []flags.Flag) *request {
 			}
 			urlArr = urlArr[:len(urlArr)-1]
 		}
-		if flag.Name == "X" {
+		if flag.Name == "X" && len(flag.Values) != 0 {
 			method = flag.Values[0]
 		}
 	}
