@@ -16,13 +16,17 @@ func main() {
 
 	baseUrl := os.Args[1]
 
-	flagArr := []flags.Flag{}
+	reqFlagArr := []flags.Flag{}
 	qFlag := flags.Create("q")
 	qFlag.Parse(os.Args)
-	flagArr = append(flagArr, *qFlag)
+	xFlag := flags.Create("X")
+	xFlag.Parse(os.Args)
 
-	req := request.Create(baseUrl, flagArr)
-	r, e := req.Get()
+	reqFlagArr = append(reqFlagArr, *qFlag)
+	reqFlagArr = append(reqFlagArr, *xFlag)
+
+	req := request.Create(baseUrl, reqFlagArr)
+	r, e := req.Execute()
 
 	res := response.Create(r, e)
 	res.Print()
