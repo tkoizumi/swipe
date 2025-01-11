@@ -19,11 +19,17 @@ func main() {
 	reqFlagArr := []flags.Flag{}
 	qFlag := flags.Create("q")
 	qFlag.Parse(os.Args)
-	xFlag := flags.Create("X")
-	xFlag.Parse(os.Args)
+	XFlag := flags.Create("X")
+	XFlag.Parse(os.Args)
+	HFlag := flags.Create("H")
+	HFlag.Parse(os.Args)
+	dFlag := flags.Create("d")
+	dFlag.Parse(os.Args)
 
 	reqFlagArr = append(reqFlagArr, *qFlag)
-	reqFlagArr = append(reqFlagArr, *xFlag)
+	reqFlagArr = append(reqFlagArr, *XFlag)
+	reqFlagArr = append(reqFlagArr, *HFlag)
+	reqFlagArr = append(reqFlagArr, *dFlag)
 
 	req := request.Create(baseUrl, reqFlagArr)
 	r, e := req.Execute()
