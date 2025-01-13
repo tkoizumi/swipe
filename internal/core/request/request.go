@@ -71,7 +71,8 @@ func (r request) Execute() (*http.Response, error) {
 		res, err = r.Post()
 	} else if r.Method == "PUT" {
 		res, err = r.Put()
-
+	} else if r.Method == "DELETE" {
+		res, err = r.Delete()
 	} else {
 		fmt.Println("Error: Invalid or unsupported HTTP method.")
 		fmt.Println("Please use a valid HTTP method such as GET, POST, PUT, DELETE, PATCH, etc.")
@@ -99,13 +100,15 @@ func (r request) Post() (*http.Response, error) {
 }
 
 func (r request) Put() (*http.Response, error) {
-	header := strings.Split(r.Header, " ")
-	headerKey := header[0][:len(header[0])-1]
-	body := r.Body
+	header := r.Header
+	if strings.Contains(header, "Content-Type") {
+		header = strings.Split(r.Header, " ")[1]
+	}
+	headerKey := "Content-Type"
 
 	fmt.Println("Sending PUT request to ", r.URL)
 	fmt.Println("header: ", r.Header)
-	fmt.Println("body: ", body)
+	fmt.Println("body: ", r.Body)
 
 	req, err := http.NewRequest(http.MethodPut, r.URL, r.Body)
 	if err != nil {
@@ -113,7 +116,32 @@ func (r request) Put() (*http.Response, error) {
 		os.Exit(1)
 	}
 
-	req.Header.Set(headerKey, header[1])
+	req.Header.Set(headerKey, header)
+
+	client := &http.Client{}
+	res, err := client.Do(req)
+
+	return res, err
+}
+
+func (r request) Delete() (*http.Response, error) {
+	header := r.Header
+	if strings.Contains(header, "Content-Type") {
+		header = strings.Split(r.Header, " ")[1]
+	}
+	headerKey := "Content-Type"
+
+	fmt.Println("Sending DELETE request to ", r.URL)
+	fmt.Println("header: ", r.Header)
+	fmt.Println("body: ", r.Body)
+
+	req, err := http.NewRequest(http.MethodDelete, r.URL, r.Body)
+	if err != nil {
+		fmt.Println("Error: ", err)
+		os.Exit(1)
+	}
+
+	req.Header.Set(headerKey, header)
 
 	client := &http.Client{}
 	res, err := client.Do(req)
