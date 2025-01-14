@@ -69,12 +69,8 @@ func (r request) Execute() (*http.Response, error) {
 		res, err = r.Get()
 	} else if r.Method == "POST" {
 		res, err = r.Post()
-	} else if r.Method == "PUT" {
-		res, err = r.Put()
-	} else if r.Method == "DELETE" {
-		res, err = r.Delete()
-	} else if r.Method == "PATCH" {
-		res, err = r.Patch()
+	} else if r.Method == "PUT" || r.Method == "DELETE" || r.Method == "PATCH" {
+		res, err = r.Do()
 	} else {
 		fmt.Println("Error: Invalid or unsupported HTTP method.")
 		fmt.Println("Please use a valid HTTP method such as GET, POST, PUT, DELETE, PATCH, etc.")
@@ -91,83 +87,20 @@ func (r request) Get() (*http.Response, error) {
 
 func (r request) Post() (*http.Response, error) {
 	r.Print()
-
 	res, err := http.Post(r.URL, r.Header, r.Body)
 	return res, err
 }
 
-func (r request) Put() (*http.Response, error) {
-	header := r.Header
-	if strings.Contains(header, "Content-Type") {
-		header = strings.Split(r.Header, " ")[1]
-	}
+func (r request) Do() (*http.Response, error) {
+	header := r.getHeader()
 	headerKey := "Content-Type"
 
 	r.Print()
 
-	req, err := http.NewRequest(http.MethodPut, r.URL, r.Body)
-	if err != nil {
-		fmt.Println("Error: ", err)
-		os.Exit(1)
-	}
-
+	req := r.createNew()
 	req.Header.Set(headerKey, header)
-
 	client := &http.Client{}
 	res, err := client.Do(req)
 
 	return res, err
-}
-
-func (r request) Delete() (*http.Response, error) {
-	header := r.Header
-	if strings.Contains(header, "Content-Type") {
-		header = strings.Split(r.Header, " ")[1]
-	}
-	headerKey := "Content-Type"
-
-	r.Print()
-
-	req, err := http.NewRequest(http.MethodDelete, r.URL, r.Body)
-	if err != nil {
-		fmt.Println("Error: ", err)
-		os.Exit(1)
-	}
-
-	req.Header.Set(headerKey, header)
-
-	client := &http.Client{}
-	res, err := client.Do(req)
-
-	return res, err
-}
-
-func (r request) Patch() (*http.Response, error) {
-	header := r.Header
-	if strings.Contains(header, "Content-Type") {
-		header = strings.Split(r.Header, " ")[1]
-	}
-	headerKey := "Content-Type"
-
-	r.Print()
-
-	req, err := http.NewRequest(http.MethodPatch, r.URL, r.Body)
-	if err != nil {
-		fmt.Println("Error: ", err)
-		os.Exit(1)
-	}
-
-	req.Header.Set(headerKey, header)
-
-	client := &http.Client{}
-	res, err := client.Do(req)
-
-	return res, err
-}
-
-func (r request) Print() {
-	fmt.Printf("Sending %s request to %s\n", r.Method, r.URL)
-	fmt.Println("header: ", r.Header)
-	fmt.Println("body: ", r.Body)
-
 }
