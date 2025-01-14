@@ -90,12 +90,7 @@ func (r request) Get() (*http.Response, error) {
 }
 
 func (r request) Post() (*http.Response, error) {
-	header := r.Header
-	body := r.Body
-
-	fmt.Println("Sending POST request to ", r.URL)
-	fmt.Println("header: ", header)
-	fmt.Println("body: ", body)
+	r.Print()
 
 	res, err := http.Post(r.URL, r.Header, r.Body)
 	return res, err
@@ -108,9 +103,7 @@ func (r request) Put() (*http.Response, error) {
 	}
 	headerKey := "Content-Type"
 
-	fmt.Println("Sending PUT request to ", r.URL)
-	fmt.Println("header: ", r.Header)
-	fmt.Println("body: ", r.Body)
+	r.Print()
 
 	req, err := http.NewRequest(http.MethodPut, r.URL, r.Body)
 	if err != nil {
@@ -133,9 +126,7 @@ func (r request) Delete() (*http.Response, error) {
 	}
 	headerKey := "Content-Type"
 
-	fmt.Println("Sending DELETE request to ", r.URL)
-	fmt.Println("header: ", r.Header)
-	fmt.Println("body: ", r.Body)
+	r.Print()
 
 	req, err := http.NewRequest(http.MethodDelete, r.URL, r.Body)
 	if err != nil {
@@ -158,9 +149,7 @@ func (r request) Patch() (*http.Response, error) {
 	}
 	headerKey := "Content-Type"
 
-	fmt.Println("Sending PATCH request to ", r.URL)
-	fmt.Println("header: ", r.Header)
-	fmt.Println("body: ", r.Body)
+	r.Print()
 
 	req, err := http.NewRequest(http.MethodPatch, r.URL, r.Body)
 	if err != nil {
@@ -174,4 +163,11 @@ func (r request) Patch() (*http.Response, error) {
 	res, err := client.Do(req)
 
 	return res, err
+}
+
+func (r request) Print() {
+	fmt.Printf("Sending %s request to %s\n", r.Method, r.URL)
+	fmt.Println("header: ", r.Header)
+	fmt.Println("body: ", r.Body)
+
 }
