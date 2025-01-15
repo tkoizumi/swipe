@@ -65,29 +65,13 @@ func (r request) Execute() (*http.Response, error) {
 	res := (*http.Response)(nil)
 	err := (error)(nil)
 
-	if r.Method == "GET" {
-		res, err = r.Get()
-	} else if r.Method == "POST" {
-		res, err = r.Post()
-	} else if r.Method == "PUT" || r.Method == "DELETE" || r.Method == "PATCH" {
+	if isValidMethod(r.Method) {
 		res, err = r.Do()
 	} else {
 		fmt.Println("Error: Invalid or unsupported HTTP method.")
 		fmt.Println("Please use a valid HTTP method such as GET, POST, PUT, DELETE, PATCH, etc.")
 		os.Exit(1)
 	}
-	return res, err
-}
-
-func (r request) Get() (*http.Response, error) {
-	fmt.Println("Sending GET request to ", r.URL)
-	res, err := http.Get(r.URL)
-	return res, err
-}
-
-func (r request) Post() (*http.Response, error) {
-	r.Print()
-	res, err := http.Post(r.URL, r.Header, r.Body)
 	return res, err
 }
 
