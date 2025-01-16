@@ -17,6 +17,8 @@ func main() {
 	baseUrl := GetUrl(os.Args)
 
 	reqFlagArr := []flags.Flag{}
+	resFlagArr := []flags.Flag{}
+
 	qFlag := flags.Create("q")
 	qFlag.Parse(os.Args)
 	XFlag := flags.Create("X")
@@ -33,10 +35,13 @@ func main() {
 	reqFlagArr = append(reqFlagArr, *HFlag)
 	reqFlagArr = append(reqFlagArr, *dFlag)
 
-	req := request.Create(baseUrl, reqFlagArr)
-	r, e := req.Execute()
+	resFlagArr = append(resFlagArr, *oFlag)
 
-	res := response.Create(r, e)
+	req := request.Create(baseUrl, reqFlagArr)
+	r := req.Execute()
+
+	res := response.Create(r, resFlagArr)
 	res.Print()
+	res.Execute()
 
 }

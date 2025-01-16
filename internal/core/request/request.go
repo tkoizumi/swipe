@@ -61,7 +61,7 @@ func Create(url string, flagArr []flags.Flag) *request {
 	}
 }
 
-func (r request) Execute() (*http.Response, error) {
+func (r request) Execute() *http.Response {
 	res := (*http.Response)(nil)
 	err := (error)(nil)
 
@@ -76,7 +76,7 @@ func (r request) Execute() (*http.Response, error) {
 		fmt.Println("Please use a valid HTTP method such as GET, POST, PUT, DELETE, PATCH, etc.")
 		os.Exit(1)
 	}
-	return res, err
+	return res
 }
 
 func (r request) Do() (*http.Response, error) {
