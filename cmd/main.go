@@ -25,6 +25,8 @@ func main() {
 	HFlag.Parse(os.Args)
 	dFlag := flags.Create("d")
 	dFlag.Parse(os.Args)
+	oFlag := flags.Create("o")
+	oFlag.Parse(os.Args)
 
 	reqFlagArr = append(reqFlagArr, *qFlag)
 	reqFlagArr = append(reqFlagArr, *XFlag)

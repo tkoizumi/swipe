@@ -34,3 +34,19 @@ func (r response) Print() {
 
 	r.Res.Body.Close()
 }
+
+func (r response) Download(filename string) {
+	file, err := os.Create(filename)
+	if err != nil {
+		fmt.Println("failed to create file: ", err)
+		os.Exit(1)
+	}
+	defer file.Close()
+
+	_, err = io.Copy(file, r.Res.Body)
+	if err != nil {
+		fmt.Println("failed to create file: ", err)
+		os.Exit(1)
+	}
+	fmt.Println("Response saved as ", filename)
+}
