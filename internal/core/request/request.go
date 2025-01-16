@@ -67,6 +67,10 @@ func (r request) Execute() (*http.Response, error) {
 
 	if isValidMethod(r.Method) {
 		res, err = r.Do()
+		if err != nil {
+			fmt.Println("Error: ", err)
+			os.Exit(1)
+		}
 	} else {
 		fmt.Println("Error: Invalid or unsupported HTTP method.")
 		fmt.Println("Please use a valid HTTP method such as GET, POST, PUT, DELETE, PATCH, etc.")
