@@ -10,6 +10,14 @@ type Flag struct {
 	Values []string
 }
 
+func PrepareAll(args []string, names []string, flagArr *[]Flag) {
+	for _, name := range names {
+		flag := Create(name)
+		flag.Parse(args)
+		*flagArr = append(*flagArr, *flag)
+	}
+}
+
 func Create(name string) *Flag {
 	return &Flag{Name: name, Values: []string{}}
 }
