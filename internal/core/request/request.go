@@ -11,7 +11,7 @@ import (
 
 type request struct {
 	Method      string
-	Header      string
+	Headers     []string
 	URL         string
 	Base        string
 	QueryParams []string
@@ -20,22 +20,26 @@ type request struct {
 
 func Create(url string, flagArr []flags.Flag) *request {
 	method := "GET" //default method
-	header := "application/x-www-form-urlencoded"
 	body := bytes.NewBuffer(nil)
 
 	urlArr := []string{url}
+	headers := []string{"application/x-www-form-urlencoded"}
+
 	queryParams := []string{}
 
 	for _, flag := range flagArr {
 		if flag.Name == "X" && len(flag.Values) != 0 {
 			method = flag.Values[0]
 		}
-		if flag.Name == "H" && len(flag.Values) != 0 {
-			header = flag.Values[0]
-		}
 		if flag.Name == "d" && len(flag.Values) != 0 {
 			bodyStr := flag.Values[0]
 			body = bytes.NewBuffer([]byte(bodyStr))
+		}
+		if flag.Name == "H" && len(flag.Values) != 0 {
+			headers = []string{}
+			for _, header := range flag.Values {
+				headers = append(headers, header)
+			}
 		}
 
 		if flag.Name == "q" {
@@ -53,7 +57,7 @@ func Create(url string, flagArr []flags.Flag) *request {
 
 	return &request{
 		URL:         finalUrl,
-		Header:      header,
+		Headers:     headers,
 		Body:        body,
 		Base:        url,
 		QueryParams: queryParams,
@@ -80,13 +84,10 @@ func (r request) Execute() *http.Response {
 }
 
 func (r request) Do() (*http.Response, error) {
-	header := r.getHeader()
-	headerKey := "Content-Type"
-
 	r.Print()
 
 	req := r.createNew()
-	req.Header.Set(headerKey, header)
+	setHeaders(r.Headers, req)
 	client := &http.Client{}
 	res, err := client.Do(req)
 
