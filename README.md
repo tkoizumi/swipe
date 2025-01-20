@@ -75,8 +75,8 @@ Get with multiple filters:
 swipe https://jsonplaceholder.typicode.com/posts -X GET -q userId=1 -q title=foo
 ```
 
-### **s**
-Get with multiple Headers:
+### **SOAP Request with Multiple Headers**
+When sending a SOAP request, you might need to include multiple headers for authentication or other purposes. You can add multiple headers using the -H flag for each one:
 ```sh
 swipe https://example.com/soap-endpoint -X POST\
 -H "Content-Type: text/xml" 
