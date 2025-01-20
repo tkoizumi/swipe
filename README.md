@@ -70,8 +70,22 @@ swipe https://jsonplaceholder.typicode.com/posts/1 -X GET -o response.json
 ```
 
 ### **Add Multiple Query Parameters**
-Fetch with multiple filters:
+Get with multiple filters:
 ```sh
 swipe https://jsonplaceholder.typicode.com/posts -X GET -q userId=1 -q title=foo
 ```
 
+### **s**
+Get with multiple Headers:
+```sh
+swipe https://example.com/soap-endpoint -X POST\
+-H "Content-Type: text/xml" 
+-H "SOAPAction: \"http://example.com/action\"" 
+-d '<?xml version="1.0" encoding="utf-8"?>
+<soap12:Envelope xmlns:soap12="http://www.w3.org/2003/05/soap-envelope">
+  <soap12:Body>
+    <Example>
+    </Example>
+  </soap12:Body>
+</soap12:Envelope>'
+```
