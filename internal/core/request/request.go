@@ -33,7 +33,17 @@ func Create(url string, flagArr []flags.Flag) *request {
 		}
 		if flag.Name == "d" && len(flag.Values) != 0 {
 			bodyStr := flag.Values[0]
-			body = bytes.NewBuffer([]byte(bodyStr))
+			if bodyStr[0] == '@' {
+				fileContent, err := os.ReadFile(bodyStr[1:])
+				if err != nil {
+					fmt.Printf("Error reading file: %v\n", err)
+					os.Exit(1)
+				}
+				body = bytes.NewBuffer(fileContent)
+
+			} else {
+				body = bytes.NewBuffer([]byte(bodyStr))
+			}
 		}
 		if flag.Name == "H" && len(flag.Values) != 0 {
 			headers = []string{}
