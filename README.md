@@ -89,3 +89,9 @@ swipe https://example.com/soap-endpoint -X POST\
   </soap12:Body>
 </soap12:Envelope>'
 ```
+
+### **Using File References as Payloads**
+Swipe allows you to reference files as payloads using the -d flag. This feature simplifies sending large JSON, XML, or other types of payloads without embedding them directly in the command.
+```sh
+swipe https://jsonplaceholder.typicode.com/posts -X POST -H "Content-Type: application/json" -d @data.json
+```
