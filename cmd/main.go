@@ -14,16 +14,34 @@ func main() {
 		os.Exit(1)
 	}
 
-	baseUrl := GetUrl(os.Args)
-
 	reqFlagArr := []flags.Flag{}
 	resFlagArr := []flags.Flag{}
 
-	reqFlags := []string{"q", "X", "H", "d"}
+	reqFlags := [][]interface{}{
+		{"q", true},
+		{"X", true},
+		{"H", true},
+		{"d", true},
+		{"L", false},
+	}
+
 	flags.PrepareAll(os.Args, reqFlags, &reqFlagArr)
 
-	resFlags := []string{"o"}
+	resFlags := [][]interface{}{
+		{"o", true},
+	}
 	flags.PrepareAll(os.Args, resFlags, &resFlagArr)
+
+	flagMap := make(map[string]bool)
+
+	for _, reqFlag := range reqFlags {
+		flagMap[reqFlag[0].(string)] = reqFlag[1].(bool)
+	}
+	for _, resFlag := range reqFlags {
+		flagMap[resFlag[0].(string)] = resFlag[1].(bool)
+	}
+
+	baseUrl := GetUrl(os.Args, flagMap)
 
 	req := request.Create(baseUrl, reqFlagArr)
 	r := req.Execute()

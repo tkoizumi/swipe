@@ -6,20 +6,23 @@ import (
 )
 
 type Flag struct {
-	Name   string
-	Values []string
+	Name     string
+	HasValue bool
+	Values   []string
 }
 
-func PrepareAll(args []string, names []string, flagArr *[]Flag) {
-	for _, name := range names {
-		flag := Create(name)
-		flag.Parse(args)
+func PrepareAll(args []string, flags [][]interface{}, flagArr *[]Flag) {
+	for _, flag := range flags {
+		flag := Create(flag[0].(string), flag[1].(bool))
+		if flag.HasValue {
+			flag.Parse(args)
+		}
 		*flagArr = append(*flagArr, *flag)
 	}
 }
 
-func Create(name string) *Flag {
-	return &Flag{Name: name, Values: []string{}}
+func Create(name string, hasValue bool) *Flag {
+	return &Flag{Name: name, HasValue: hasValue, Values: []string{}}
 }
 
 func (f *Flag) Parse(args []string) {

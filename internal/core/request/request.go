@@ -16,11 +16,13 @@ type request struct {
 	Base        string
 	QueryParams []string
 	Body        *bytes.Buffer
+	Redirect    bool
 }
 
 func Create(url string, flagArr []flags.Flag) *request {
 	method := "GET" //default method
 	body := bytes.NewBuffer(nil)
+	redirect := false
 
 	urlArr := []string{url}
 	headers := []string{"application/x-www-form-urlencoded"}
@@ -51,6 +53,9 @@ func Create(url string, flagArr []flags.Flag) *request {
 				headers = append(headers, header)
 			}
 		}
+		if flag.Name == "L" {
+			redirect = true
+		}
 
 		if flag.Name == "q" {
 			urlArr = append(urlArr, "?")
@@ -72,6 +77,7 @@ func Create(url string, flagArr []flags.Flag) *request {
 		Base:        url,
 		QueryParams: queryParams,
 		Method:      method,
+		Redirect:    redirect,
 	}
 }
 
@@ -80,6 +86,7 @@ func (r request) Execute() *http.Response {
 	err := (error)(nil)
 
 	if isValidMethod(r.Method) {
+		r.Print()
 		res, err = r.Do()
 		if err != nil {
 			fmt.Println("Error: ", err)
@@ -94,11 +101,17 @@ func (r request) Execute() *http.Response {
 }
 
 func (r request) Do() (*http.Response, error) {
-	r.Print()
-
 	req := r.createNew()
 	setHeaders(r.Headers, req)
-	client := &http.Client{}
+	client := &http.Client{
+		CheckRedirect: func(req *http.Request, via []*http.Request) error {
+			if r.Redirect {
+				return nil
+			} else {
+				return http.ErrUseLastResponse
+			}
+		}}
+
 	res, err := client.Do(req)
 
 	return res, err
