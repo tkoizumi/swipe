@@ -9,11 +9,11 @@ import (
 
 func (r request) Print() {
 	fmt.Printf("Sending %s request to %s\n", r.Method, r.URL)
-	fmt.Println("headers: ")
-	for _, header := range r.Headers {
-		fmt.Println(header)
-	}
-	fmt.Println("body: ", r.Body)
+	// fmt.Println("headers: ")
+	// for _, header := range r.Headers {
+	// 	fmt.Println(header)
+	// }
+	// fmt.Println("body: ", r.Body)
 }
 
 func getHeader(header string) []string {

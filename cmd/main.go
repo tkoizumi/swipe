@@ -17,6 +17,7 @@ func main() {
 	reqFlagArr := []flags.Flag{}
 	resFlagArr := []flags.Flag{}
 
+	// flag id, does flag have value
 	reqFlags := [][]interface{}{
 		{"q", true},
 		{"X", true},
@@ -29,6 +30,7 @@ func main() {
 
 	resFlags := [][]interface{}{
 		{"o", true},
+		{"i", false},
 	}
 	flags.PrepareAll(os.Args, resFlags, &resFlagArr)
 

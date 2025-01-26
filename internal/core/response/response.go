@@ -10,12 +10,25 @@ import (
 )
 
 type response struct {
-	Res      *http.Response
-	Filename string
-	Body     []byte
+	Res           *http.Response
+	Filename      string
+	Header        map[string][]string
+	Body          []byte
+	IncludeHeader bool
 }
 
 func Create(res *http.Response, flagArr []flags.Flag) *response {
+	includeHeader := false
+	header := map[string][]string{}
+
+	for k, values := range res.Header {
+		v := []string{}
+		for _, value := range values {
+			v = append(v, value)
+		}
+		header[k] = values
+	}
+
 	body, err := io.ReadAll(res.Body)
 	if err != nil {
 		fmt.Println("Err:", err)
@@ -28,8 +41,11 @@ func Create(res *http.Response, flagArr []flags.Flag) *response {
 		if flag.Name == "o" && len(flag.Values) != 0 {
 			filename = flag.Values[0]
 		}
+		if flag.Name == "i" && flag.InArg {
+			includeHeader = true
+		}
 	}
-	return &response{Res: res, Filename: filename, Body: body}
+	return &response{Res: res, Filename: filename, Header: header, Body: body, IncludeHeader: includeHeader}
 }
 
 func (r response) Execute() {
@@ -39,6 +55,12 @@ func (r response) Execute() {
 }
 
 func (r response) Print() {
+	if r.IncludeHeader {
+		for k, v := range r.Header {
+			fmt.Print(k + ": ")
+			fmt.Println(v)
+		}
+	}
 	fmt.Println(string(r.Body))
 }
 
