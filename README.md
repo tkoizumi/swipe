@@ -95,3 +95,8 @@ Swipe allows you to reference files as payloads using the -d flag. This feature 
 ```sh
 swipe https://jsonplaceholder.typicode.com/posts -X POST -H "Content-Type: application/json" -d @data.json
 ```
+
+### Including Response Headers
+To perform a GET request and include the response headers in the output:
+```sh
+swipe -i https://jsonplaceholder.typicode.com/posts/1
