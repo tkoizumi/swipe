@@ -24,6 +24,7 @@ func main() {
 		{"H", true},
 		{"d", true},
 		{"L", false},
+		{"u", true},
 	}
 
 	flags.PrepareAll(os.Args, reqFlags, &reqFlagArr)

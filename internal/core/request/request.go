@@ -17,17 +17,17 @@ type request struct {
 	QueryParams []string
 	Body        *bytes.Buffer
 	Redirect    bool
+	User        string
 }
 
 func Create(url string, flagArr []flags.Flag) *request {
 	method := "GET" //default method
 	body := bytes.NewBuffer(nil)
 	redirect := false
-
 	urlArr := []string{url}
 	headers := []string{"application/x-www-form-urlencoded"}
-
 	queryParams := []string{}
+	user := ""
 
 	for _, flag := range flagArr {
 		if flag.Name == "X" && len(flag.Values) != 0 {
@@ -67,6 +67,10 @@ func Create(url string, flagArr []flags.Flag) *request {
 			}
 			urlArr = urlArr[:len(urlArr)-1]
 		}
+
+		if flag.Name == "u" && len(flag.Values) != 0 {
+			user = flag.Values[0]
+		}
 	}
 	finalUrl := strings.Join(urlArr, "")
 
@@ -78,6 +82,7 @@ func Create(url string, flagArr []flags.Flag) *request {
 		QueryParams: queryParams,
 		Method:      method,
 		Redirect:    redirect,
+		User:        user,
 	}
 }
 
