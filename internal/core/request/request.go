@@ -18,6 +18,7 @@ type request struct {
 	Body        *bytes.Buffer
 	Redirect    bool
 	User        string
+	Password    string
 }
 
 func Create(url string, flagArr []flags.Flag) *request {
@@ -28,6 +29,7 @@ func Create(url string, flagArr []flags.Flag) *request {
 	headers := []string{"application/x-www-form-urlencoded"}
 	queryParams := []string{}
 	user := ""
+	password := ""
 
 	for _, flag := range flagArr {
 		if flag.Name == "X" && len(flag.Values) != 0 {
@@ -71,6 +73,9 @@ func Create(url string, flagArr []flags.Flag) *request {
 		if flag.Name == "u" && len(flag.Values) != 0 {
 			user = flag.Values[0]
 		}
+		if flag.Name == "p" && len(flag.Values) != 0 {
+			password = flag.Values[0]
+		}
 	}
 	finalUrl := strings.Join(urlArr, "")
 
@@ -83,6 +88,7 @@ func Create(url string, flagArr []flags.Flag) *request {
 		Method:      method,
 		Redirect:    redirect,
 		User:        user,
+		Password:    password,
 	}
 }
 
