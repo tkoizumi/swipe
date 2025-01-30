@@ -114,6 +114,8 @@ func (r request) Execute() *http.Response {
 func (r request) Do() (*http.Response, error) {
 	req := r.createNew()
 	setHeaders(r.Headers, req)
+	req.SetBasicAuth(r.User, r.Password)
+
 	client := &http.Client{
 		CheckRedirect: func(req *http.Request, via []*http.Request) error {
 			if r.Redirect {
