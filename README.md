@@ -100,3 +100,13 @@ swipe https://jsonplaceholder.typicode.com/posts -X POST -H "Content-Type: appli
 To perform a GET request and include the response headers in the output:
 ```sh
 swipe -i https://jsonplaceholder.typicode.com/posts/1
+
+## Basic Authentication
+
+`swipe` supports Basic Authentication using the `-u` and `-p` flags to specify a username and password.
+
+### Usage:
+
+```sh
+swipe https://httpbin.org/basic-auth/user/passwd -u user -p passwd
+
