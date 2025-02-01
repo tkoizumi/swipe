@@ -14,7 +14,7 @@ func (r request) Print() {
 func getHeader(header string) []string {
 	headerKV := make([]string, 0, 2)
 
-	if strings.Contains(header, "Content-Type") || strings.Contains(header, "SOAPAction") {
+	if strings.Contains(header, ":") {
 		headerKV = strings.Split(header, ":")
 		headerKV[1] = strings.TrimSpace(headerKV[1])
 
