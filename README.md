@@ -102,9 +102,16 @@ To perform a GET request and include the response headers in the output:
 swipe -i https://jsonplaceholder.typicode.com/posts/1
 ```
 
-## Basic Authentication
+### Basic Authentication
 
 Swipe supports Basic Authentication using the `-u` and `-p` flags to specify a username and password.
 ```sh
 swipe https://httpbin.org/basic-auth/user/passwd -u user -p passwd
+```
 
+### Using Custom API Key Header
+
+Some APIs require authentication via a custom header. To send an API key in the request header, use the `-H` option:
+```sh
+swipe -H "X-API-Key: YOUR_API_KEY" https://api.example.com/data
+```
