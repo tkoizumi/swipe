@@ -51,6 +51,5 @@ func main() {
 	r := req.Execute()
 
 	res := response.Create(r, resFlagArr)
-	res.Print()
 	res.Execute()
 }

@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"strings"
 	flags "swipe/internal/core/flags"
 )
 
@@ -15,6 +16,7 @@ type response struct {
 	Header        map[string][]string
 	Body          []byte
 	IncludeHeader bool
+	ParseFields   []string
 }
 
 func Create(res *http.Response, flagArr []flags.Flag) *response {
@@ -49,9 +51,13 @@ func Create(res *http.Response, flagArr []flags.Flag) *response {
 }
 
 func (r response) Execute() {
+	r.Print()
 	if r.Filename != "" {
 		r.Download()
 	}
+	r.Parse()
+	//if r.ParseFields != nil {
+	//}
 }
 
 func (r response) Print() {
@@ -82,4 +88,20 @@ func (r response) Download() {
 	defer file.Close()
 
 	fmt.Println("Response saved as", r.Filename)
+}
+
+func (r response) Parse() {
+	content_type := r.Header["Content-Type"][0]
+	format := detectFormat(content_type)
+	fmt.Println("format: ", format)
+}
+
+func detectFormat(content_type string) string {
+	if strings.Contains(content_type, "application/json") {
+		return "json"
+	}
+	if strings.Contains(content_type, "text/xml") {
+		return "xml"
+	}
+	return "unknown"
 }
