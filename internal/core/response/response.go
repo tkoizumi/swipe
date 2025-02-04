@@ -8,6 +8,7 @@ import (
 	"os"
 	"strings"
 	flags "swipe/internal/core/flags"
+	parser "swipe/internal/core/parser"
 )
 
 type response struct {
@@ -22,6 +23,7 @@ type response struct {
 func Create(res *http.Response, flagArr []flags.Flag) *response {
 	includeHeader := false
 	header := map[string][]string{}
+	parseFields := []string{}
 
 	for k, values := range res.Header {
 		v := []string{}
@@ -46,8 +48,11 @@ func Create(res *http.Response, flagArr []flags.Flag) *response {
 		if flag.Name == "i" && flag.InArg {
 			includeHeader = true
 		}
+		if flag.Name == "P" && len(flag.Values) != 0 {
+			parseFields = flag.Values
+		}
 	}
-	return &response{Res: res, Filename: filename, Header: header, Body: body, IncludeHeader: includeHeader}
+	return &response{Res: res, Filename: filename, Header: header, Body: body, IncludeHeader: includeHeader, ParseFields: parseFields}
 }
 
 func (r response) Execute() {
@@ -55,9 +60,9 @@ func (r response) Execute() {
 	if r.Filename != "" {
 		r.Download()
 	}
-	r.Parse()
-	//if r.ParseFields != nil {
-	//}
+	if len(r.ParseFields) != 0 {
+		r.Parse()
+	}
 }
 
 func (r response) Print() {
@@ -68,6 +73,7 @@ func (r response) Print() {
 		}
 	}
 	fmt.Println(string(r.Body))
+	fmt.Println()
 }
 
 func (r response) Download() {
@@ -93,7 +99,13 @@ func (r response) Download() {
 func (r response) Parse() {
 	content_type := r.Header["Content-Type"][0]
 	format := detectFormat(content_type)
-	fmt.Println("format: ", format)
+	if format == "" {
+		fmt.Println("Malformed data")
+		os.Exit(1)
+	}
+	if format == "json" {
+		fmt.Println(parser.ParseJSON(r.Body, r.ParseFields))
+	}
 }
 
 func detectFormat(content_type string) string {
@@ -103,5 +115,5 @@ func detectFormat(content_type string) string {
 	if strings.Contains(content_type, "text/xml") {
 		return "xml"
 	}
-	return "unknown"
+	return ""
 }

@@ -33,6 +33,7 @@ func main() {
 	resFlags := [][]interface{}{
 		{"o", true},
 		{"i", false},
+		{"P", true},
 	}
 	flags.PrepareAll(os.Args, resFlags, &resFlagArr)
 
