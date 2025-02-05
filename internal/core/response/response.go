@@ -56,13 +56,13 @@ func Create(res *http.Response, flagArr []flags.Flag) *response {
 }
 
 func (r response) Execute() {
-	r.Print()
 	if r.Filename != "" {
 		r.Download()
 	}
 	if len(r.ParseFields) != 0 {
 		r.Parse()
 	}
+	r.Print()
 }
 
 func (r response) Print() {
@@ -96,7 +96,7 @@ func (r response) Download() {
 	fmt.Println("Response saved as", r.Filename)
 }
 
-func (r response) Parse() {
+func (r *response) Parse() {
 	content_type := r.Header["Content-Type"][0]
 	format := detectFormat(content_type)
 	if format == "" {
@@ -104,7 +104,8 @@ func (r response) Parse() {
 		os.Exit(1)
 	}
 	if format == "json" {
-		fmt.Println(parser.ParseJSON(r.Body, r.ParseFields))
+		jsonBytes := parser.ParseJSON(r.Body, r.ParseFields)
+		r.Body = jsonBytes
 	}
 }
 

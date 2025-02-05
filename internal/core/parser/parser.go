@@ -5,8 +5,8 @@ import (
 	"fmt"
 )
 
-func ParseJSON(data []byte, fields []string) []string {
-	fieldValues := []string{}
+func ParseJSON(data []byte, fields []string) []byte {
+	fieldValues := map[string]string{}
 	jsonData := []map[string]interface{}{}
 	err := json.Unmarshal(data, &jsonData)
 	if err != nil {
@@ -21,12 +21,16 @@ func ParseJSON(data []byte, fields []string) []string {
 		}
 
 		if strValue, ok := jsonData[0][field].(string); ok {
-			fieldValues = append(fieldValues, strValue)
+			fieldValues[field] = strValue
 		} else {
-			fieldValues = append(fieldValues, fmt.Sprintf("%v", value))
+			fieldValues[field] = fmt.Sprintf("%v", value)
 		}
 	}
-	return fieldValues
+	jsonBytes, err := json.MarshalIndent(fieldValues, "", "    ")
+	if err != nil {
+		fmt.Println("Error:", err)
+	}
+	return jsonBytes
 }
 
 func ParseXML(data []byte) map[string]string {
