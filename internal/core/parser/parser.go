@@ -6,27 +6,33 @@ import (
 )
 
 func ParseJSON(data []byte, fields []string) []byte {
-	fieldValues := map[string]string{}
 	jsonData := []map[string]interface{}{}
 	err := json.Unmarshal(data, &jsonData)
 	if err != nil {
 		fmt.Println("Error:", err)
 	}
 
-	for _, field := range fields {
-		value, exists := jsonData[0][field]
-		if !exists {
-			fmt.Println(field, "field not found")
-			continue
-		}
+	parsedData := []map[string]string{}
 
-		if strValue, ok := jsonData[0][field].(string); ok {
-			fieldValues[field] = strValue
-		} else {
-			fieldValues[field] = fmt.Sprintf("%v", value)
+	for _, obj := range jsonData {
+		fieldValues := map[string]string{}
+		for _, field := range fields {
+			value, exists := obj[field]
+			if !exists {
+				fmt.Println(field, "field not found")
+				continue
+			}
+
+			if strValue, ok := obj[field].(string); ok {
+				fieldValues[field] = strValue
+			} else {
+				fieldValues[field] = fmt.Sprintf("%v", value)
+			}
 		}
+		parsedData = append(parsedData, fieldValues)
 	}
-	jsonBytes, err := json.MarshalIndent(fieldValues, "", "    ")
+
+	jsonBytes, err := json.MarshalIndent(parsedData, "", "    ")
 	if err != nil {
 		fmt.Println("Error:", err)
 	}
