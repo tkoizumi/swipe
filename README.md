@@ -117,7 +117,7 @@ swipe -H "X-API-Key: YOUR_API_KEY" https://api.example.com/data
 ```
 ### Parsing JSON for specific fields
 
-To parse JSON response for a specific field, use the `-P` option:
+To parse (single or multiple) JSON response for a specific field, use the `-P` option:
 ```sh
 swipe https://jsonplaceholder.typicode.com/posts -X GET -q id=1 -P title
 ```
