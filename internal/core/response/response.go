@@ -49,7 +49,7 @@ func Create(res *http.Response, flagArr []flags.Flag) *response {
 			includeHeader = true
 		}
 		if flag.Name == "P" && len(flag.Values) != 0 {
-			parseFields = flag.Values
+			parseFields = strings.Split(flag.Values[0], ",")
 		}
 	}
 	return &response{Res: res, Filename: filename, Header: header, Body: body, IncludeHeader: includeHeader, ParseFields: parseFields}
