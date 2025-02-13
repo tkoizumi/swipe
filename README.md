@@ -121,3 +121,9 @@ To parse (single or multiple) JSON response for a specific field, use the `-P` o
 ```sh
 swipe https://jsonplaceholder.typicode.com/posts -X GET -q id=1 -P title
 ```
+### Parsing JSON for multiple fields
+
+To parse (single or multiple) JSON response for multiple fields, use the `-P` option with a comma separated values of field names:
+```sh
+swipe https://jsonplaceholder.typicode.com/posts -X GET -q id=1 -P 'title,id'
+```
