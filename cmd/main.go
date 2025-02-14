@@ -37,14 +37,9 @@ func main() {
 	}
 	flags.PrepareAll(os.Args, resFlags, &resFlagArr)
 
-	flagMap := make(map[string]bool)
+	allFlags := append(reqFlags, resFlags...)
 
-	for _, reqFlag := range reqFlags {
-		flagMap[reqFlag[0].(string)] = reqFlag[1].(bool)
-	}
-	for _, resFlag := range reqFlags {
-		flagMap[resFlag[0].(string)] = resFlag[1].(bool)
-	}
+	flagMap := MakeFlagMap(allFlags)
 
 	baseUrl := GetUrl(os.Args, flagMap)
 

@@ -18,3 +18,12 @@ func GetUrl(args []string, flagHasValue map[string]bool) string {
 	}
 	return ""
 }
+
+func MakeFlagMap(flagArr [][]interface{}) map[string]bool {
+	flagMap := make(map[string]bool)
+
+	for _, f := range flagArr {
+		flagMap[f[0].(string)] = f[1].(bool)
+	}
+	return flagMap
+}
