@@ -48,7 +48,7 @@ func Create(res *http.Response, flagArr []flags.Flag) *response {
 		if flag.Name == "i" && flag.InArg {
 			includeHeader = true
 		}
-		if flag.Name == "P" && len(flag.Values) != 0 {
+		if flag.Name == "E" && len(flag.Values) != 0 {
 			parseFields = strings.Split(flag.Values[0], ",")
 		}
 	}
