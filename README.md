@@ -115,15 +115,15 @@ Some APIs require authentication via a custom header. To send an API key in the 
 ```sh
 swipe -H "X-API-Key: YOUR_API_KEY" https://api.example.com/data
 ```
-### Parsing JSON for specific fields
+### Parsing JSON for a specific field
 
-To parse (single or multiple) JSON response for a specific field, use the `-P` option:
+To parse (single or multiple) JSON response for a specific field, use the `-E` option:
 ```sh
-swipe https://jsonplaceholder.typicode.com/posts -X GET -q id=1 -P title
+swipe https://jsonplaceholder.typicode.com/posts -X GET -q id=1 -E title
 ```
 ### Parsing JSON for multiple fields
 
-To parse (single or multiple) JSON response for multiple fields, use the `-P` option with a comma separated values of field names:
+To parse (single or multiple) JSON response for multiple fields, use the `-E` option with a comma separated values of field names:
 ```sh
-swipe https://jsonplaceholder.typicode.com/posts -X GET -q id=1 -P 'title,id'
+swipe https://jsonplaceholder.typicode.com/posts -X GET -q id=1 -E 'title,id'
 ```
