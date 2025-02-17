@@ -18,12 +18,14 @@ type response struct {
 	Body          []byte
 	IncludeHeader bool
 	ParseFields   []string
+	ParseStruct   string
 }
 
 func Create(res *http.Response, flagArr []flags.Flag) *response {
 	includeHeader := false
 	header := map[string][]string{}
 	parseFields := []string{}
+	parseStruct := ""
 
 	for k, values := range res.Header {
 		v := []string{}
@@ -51,18 +53,24 @@ func Create(res *http.Response, flagArr []flags.Flag) *response {
 		if flag.Name == "E" && len(flag.Values) != 0 {
 			parseFields = strings.Split(flag.Values[0], ",")
 		}
+		if flag.Name == "P" && len(flag.Values) != 0 {
+			parseStruct = flag.Values[0]
+		}
 	}
-	return &response{Res: res, Filename: filename, Header: header, Body: body, IncludeHeader: includeHeader, ParseFields: parseFields}
+	return &response{Res: res, Filename: filename, Header: header, Body: body, IncludeHeader: includeHeader, ParseFields: parseFields, ParseStruct: parseStruct}
 }
 
 func (r response) Execute() {
-	if r.Filename != "" {
-		r.Download()
-	}
 	if len(r.ParseFields) != 0 {
+		r.Extract()
+	}
+	if r.ParseStruct != "" {
 		r.Parse()
 	}
 	r.Print()
+	if r.Filename != "" {
+		r.Download()
+	}
 }
 
 func (r response) Print() {
@@ -96,6 +104,19 @@ func (r response) Download() {
 	fmt.Println("Response saved as", r.Filename)
 }
 
+func (r *response) Extract() {
+	content_type := r.Header["Content-Type"][0]
+	format := detectFormat(content_type)
+	if format == "" {
+		fmt.Println("Malformed data")
+		os.Exit(1)
+	}
+	if format == "json" {
+		jsonBytes := parser.ExtractFields(r.Body, r.ParseFields)
+		r.Body = jsonBytes
+	}
+}
+
 func (r *response) Parse() {
 	content_type := r.Header["Content-Type"][0]
 	format := detectFormat(content_type)
@@ -104,7 +125,7 @@ func (r *response) Parse() {
 		os.Exit(1)
 	}
 	if format == "json" {
-		jsonBytes := parser.ParseJSON(r.Body, r.ParseFields)
+		jsonBytes := parser.ParseJSON(r.Body, r.ParseStruct)
 		r.Body = jsonBytes
 	}
 }

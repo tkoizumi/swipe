@@ -34,6 +34,7 @@ func main() {
 		{"o", true},
 		{"i", false},
 		{"E", true},
+		{"P", true},
 	}
 	flags.PrepareAll(os.Args, resFlags, &resFlagArr)
 
