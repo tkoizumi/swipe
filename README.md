@@ -127,3 +127,9 @@ To parse (single or multiple) JSON response for multiple fields, use the `-E` op
 ```sh
 swipe https://jsonplaceholder.typicode.com/posts -X GET -q id=1 -E 'title,id'
 ```
+### Swipe: jq-like JSON Parsing  
+
+Swipe now supports powerful jq-like JSON parsing, allowing you to extract and transform API responses effortlessly. Using the `-P` flag, you can define structured mappings with jq-style expressions. 
+```sh
+swipe https://jsonplaceholder.typicode.com/posts -X GET -P '{"#": .id, "name": .title}' -o test.json -q id=1
+```
