@@ -1,15 +1,9 @@
 package request
 
 import (
-	"fmt"
 	"net/http"
-	"os"
 	"strings"
 )
-
-func (r request) Print() {
-	fmt.Printf("Sending %s request to %s\n", r.Method, r.URL)
-}
 
 func getHeader(header string) []string {
 	headerKV := make([]string, 0, 2)
@@ -23,15 +17,6 @@ func getHeader(header string) []string {
 		headerKV = append(headerKV, header)
 	}
 	return headerKV
-}
-
-func (r request) createNew() *http.Request {
-	req, err := http.NewRequest(r.Method, r.URL, r.Body)
-	if err != nil {
-		fmt.Println("Error: ", err)
-		os.Exit(1)
-	}
-	return req
 }
 
 func setHeaders(headers []string, req *http.Request) {

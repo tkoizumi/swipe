@@ -8,6 +8,7 @@ import (
 	"os"
 	"strings"
 	flags "swipe/internal/core/flags"
+	parser "swipe/internal/core/parser"
 )
 
 type response struct {
@@ -109,4 +110,30 @@ func (r response) Download() {
 	defer file.Close()
 
 	fmt.Println("Response saved as", r.Filename)
+}
+
+func (r *response) Extract() {
+	content_type := r.Header["Content-Type"][0]
+	format := detectFormat(content_type)
+	if format == "" {
+		fmt.Println("Malformed data")
+		os.Exit(1)
+	}
+	if format == "json" {
+		jsonBytes := parser.ExtractFields(r.Body, r.ParseFields)
+		r.Body = jsonBytes
+	}
+}
+
+func (r *response) Parse() {
+	content_type := r.Header["Content-Type"][0]
+	format := detectFormat(content_type)
+	if format == "" {
+		fmt.Println("Malformed data")
+		os.Exit(1)
+	}
+	if format == "json" {
+		jsonBytes := parser.ParseJSON(r.Body, r.ParseStruct)
+		r.Body = jsonBytes
+	}
 }
