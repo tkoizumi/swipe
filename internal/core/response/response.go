@@ -2,13 +2,14 @@ package response
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"os"
-	"strings"
 	flags "swipe/internal/core/flags"
-	parser "swipe/internal/core/parser"
+
+	"github.com/itchyny/gojq"
 )
 
 type response struct {
@@ -17,14 +18,12 @@ type response struct {
 	Header        map[string][]string
 	Body          []byte
 	IncludeHeader bool
-	ParseFields   []string
 	ParseStruct   string
 }
 
 func Create(res *http.Response, flagArr []flags.Flag) *response {
 	includeHeader := false
 	header := map[string][]string{}
-	parseFields := []string{}
 	parseStruct := ""
 
 	for k, values := range res.Header {
@@ -50,9 +49,6 @@ func Create(res *http.Response, flagArr []flags.Flag) *response {
 		if flag.Name == "i" && flag.InArg {
 			includeHeader = true
 		}
-		if flag.Name == "E" && len(flag.Values) != 0 {
-			parseFields = strings.Split(flag.Values[0], ",")
-		}
 		if flag.Name == "P" && len(flag.Values) != 0 {
 			parseStruct = flag.Values[0]
 		}
@@ -63,15 +59,11 @@ func Create(res *http.Response, flagArr []flags.Flag) *response {
 		Header:        header,
 		Body:          body,
 		IncludeHeader: includeHeader,
-		ParseFields:   parseFields,
 		ParseStruct:   parseStruct,
 	}
 }
 
 func (r response) Execute() {
-	if len(r.ParseFields) != 0 {
-		r.Extract()
-	}
 	if r.ParseStruct != "" {
 		r.Parse()
 	}
@@ -112,19 +104,6 @@ func (r response) Download() {
 	fmt.Println("Response saved as", r.Filename)
 }
 
-func (r *response) Extract() {
-	content_type := r.Header["Content-Type"][0]
-	format := detectFormat(content_type)
-	if format == "" {
-		fmt.Println("Malformed data")
-		os.Exit(1)
-	}
-	if format == "json" {
-		jsonBytes := parser.ExtractFields(r.Body, r.ParseFields)
-		r.Body = jsonBytes
-	}
-}
-
 func (r *response) Parse() {
 	content_type := r.Header["Content-Type"][0]
 	format := detectFormat(content_type)
@@ -133,7 +112,41 @@ func (r *response) Parse() {
 		os.Exit(1)
 	}
 	if format == "json" {
-		jsonBytes := parser.ParseJSON(r.Body, r.ParseStruct)
+		var jsonData interface{}
+
+		err := json.Unmarshal(r.Body, &jsonData)
+		if err != nil {
+			fmt.Println("Failed to parse JSON:", err)
+			os.Exit(1)
+		}
+
+		query, err := gojq.Parse(r.ParseStruct)
+		if err != nil {
+			fmt.Println("Invalid JQ query:", err)
+			os.Exit(1)
+		}
+
+		iter := query.Run(jsonData)
+		var results []interface{}
+		for {
+			value, ok := iter.Next()
+			fmt.Println("value: ", value)
+			if !ok {
+				break
+			}
+			if err, isErr := value.(error); isErr {
+				fmt.Println("JQ Error:", err)
+				os.Exit(1)
+			}
+			results = append(results, value)
+		}
+
+		jsonBytes, err := json.MarshalIndent(results, "", "  ")
+		if err != nil {
+			fmt.Println("Error marshaling JSON:", err)
+			os.Exit(1)
+		}
+
 		r.Body = jsonBytes
 	}
 }
