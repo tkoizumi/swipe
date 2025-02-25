@@ -115,21 +115,10 @@ Some APIs require authentication via a custom header. To send an API key in the 
 ```sh
 swipe -H "X-API-Key: YOUR_API_KEY" https://api.example.com/data
 ```
-### Parsing JSON for a specific field
 
-To parse (single or multiple) JSON response for a specific field, use the `-E` option:
-```sh
-swipe https://jsonplaceholder.typicode.com/posts -X GET -q id=1 -E title
-```
-### Parsing JSON for multiple fields
+### Extract JSON and transform API response (jq syntax) 
 
-To parse (single or multiple) JSON response for multiple fields, use the `-E` option with a comma separated values of field names:
+To extract and transform API responses effortlessly, use the `-P` flag, you can define structured mappings with flexible expressions. The syntax is the same as jq transformations.
 ```sh
-swipe https://jsonplaceholder.typicode.com/posts -X GET -q id=1 -E 'title,id'
-```
-### Extract JSON and transform API response  
-
-To extract and transform API responses effortlessly, use the `-P` flag, you can define structured mappings with flexible expressions.  
-```sh
-swipe https://jsonplaceholder.typicode.com/posts -X GET -P '{"#": .id, "name": .title}' -o test.json -q id=1
+swipe https://jsonplaceholder.typicode.com/posts -X GET -P ".[] | {title, id}"
 ```
