@@ -2,6 +2,7 @@ package request
 
 import (
 	"bytes"
+	"crypto/tls"
 	"fmt"
 	"net/http"
 	"os"
@@ -10,15 +11,18 @@ import (
 )
 
 type request struct {
-	Method      string
-	Headers     []string
-	URL         string
-	Base        string
-	QueryParams []string
-	Body        *bytes.Buffer
-	Redirect    bool
-	User        string
-	Password    string
+	Method         string
+	Headers        []string
+	URL            string
+	Base           string
+	QueryParams    []string
+	Body           *bytes.Buffer
+	Redirect       bool
+	User           string
+	Password       string
+	ClientCertPath string
+	PrivateKeyPath string
+	TLSConfig      *tls.Config
 }
 
 func Create(url string, flagArr []flags.Flag) *request {
@@ -30,6 +34,8 @@ func Create(url string, flagArr []flags.Flag) *request {
 	queryParams := []string{}
 	user := ""
 	password := ""
+	clientCertPath := ""
+	privateKeyPath := ""
 
 	for _, flag := range flagArr {
 		if flag.Name == "X" && len(flag.Values) != 0 {
@@ -76,19 +82,27 @@ func Create(url string, flagArr []flags.Flag) *request {
 		if flag.Name == "p" && len(flag.Values) != 0 {
 			password = flag.Values[0]
 		}
+		if flag.Name == "E" && len(flag.Values) != 0 {
+			clientCertPath = flag.Values[0]
+		}
+		if flag.Name == "Y" && len(flag.Values) != 0 {
+			privateKeyPath = flag.Values[0]
+		}
 	}
 	finalUrl := strings.Join(urlArr, "")
 
 	return &request{
-		URL:         finalUrl,
-		Headers:     headers,
-		Body:        body,
-		Base:        url,
-		QueryParams: queryParams,
-		Method:      method,
-		Redirect:    redirect,
-		User:        user,
-		Password:    password,
+		URL:            finalUrl,
+		Headers:        headers,
+		Body:           body,
+		Base:           url,
+		QueryParams:    queryParams,
+		Method:         method,
+		Redirect:       redirect,
+		User:           user,
+		Password:       password,
+		ClientCertPath: clientCertPath,
+		PrivateKeyPath: privateKeyPath,
 	}
 }
 
@@ -120,19 +134,34 @@ func (r request) Do() (*http.Response, error) {
 
 	setHeaders(r.Headers, req)
 	req.SetBasicAuth(r.User, r.Password)
+	r.LoadClientCert()
 
 	client := &http.Client{
+		Transport: &http.Transport{
+			TLSClientConfig: r.TLSConfig,
+		},
 		CheckRedirect: func(req *http.Request, via []*http.Request) error {
 			if r.Redirect {
 				return nil
 			} else {
 				return http.ErrUseLastResponse
 			}
-		}}
+		},
+	}
 
 	res, err := client.Do(req)
 
 	return res, err
+}
+
+func (r *request) LoadClientCert() {
+	cert, err := tls.LoadX509KeyPair(r.ClientCertPath, r.PrivateKeyPath)
+	if err != nil {
+		fmt.Println("Error loading client certificate:", err)
+		return
+	}
+
+	r.TLSConfig.Certificates = []tls.Certificate{cert}
 }
 
 func (r request) Print() {
