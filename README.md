@@ -115,6 +115,14 @@ Some APIs require authentication via a custom header. To send an API key in the 
 ```sh
 swipe -H "X-API-Key: YOUR_API_KEY" https://api.example.com/data
 ```
+### Using .pem and Private Key for SOAP API Access 
+
+To authenticate and access SOAP APIs in the **swipe** project using a **.pem certificate** and a **private key**, use the following flags:
+- `-E cert.pem` – Specifies the client certificate for authentication.
+- `-Y private.key` – Provides the corresponding private key for secure communication.
+```sh
+swipe https://api.example.com/soap-endpoint -X POST -E cert.pem -Y private.key -d some.xml
+```
 
 ### Extract JSON and transform API response (jq syntax) 
 
