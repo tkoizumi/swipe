@@ -130,3 +130,11 @@ To extract and transform API responses effortlessly, use the `-P` flag, you can 
 ```sh
 swipe https://jsonplaceholder.typicode.com/posts -X GET -P ".[] | {title, id}"
 ```
+### Filtering Based on Conditions
+```sh
+swipe https://jsonplaceholder.typicode.com/posts -X GET -P "[.[] | select(.userId == 1)]"
+```
+### Renaming Fields in the Output
+```sh
+swipe https://jsonplaceholder.typicode.com/posts -X GET -P ".[] | {heading: .title, post_id: .id}"
+```
