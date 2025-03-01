@@ -44,13 +44,13 @@ func Create(res *http.Response, flagArr []flags.Flag) *response {
 	filename := ""
 	for _, flag := range flagArr {
 		if flag.Name == "o" && len(flag.Values) != 0 {
-			filename = flag.Values[0]
+			filename = flag.GetValue()
 		}
 		if flag.Name == "i" && flag.InArg {
 			includeHeader = true
 		}
 		if flag.Name == "P" && len(flag.Values) != 0 {
-			parseStruct = flag.Values[0]
+			parseStruct = flag.GetValue()
 		}
 	}
 	return &response{

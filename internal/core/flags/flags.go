@@ -44,3 +44,7 @@ func (f *Flag) Parse(args []string) {
 
 	f.Values = queryParams
 }
+
+func (f Flag) GetValue() string {
+	return f.Values[0]
+}

@@ -39,7 +39,7 @@ func Create(url string, flagArr []flags.Flag) *request {
 
 	for _, flag := range flagArr {
 		if flag.Name == "X" && len(flag.Values) != 0 {
-			method = flag.Values[0]
+			method = flag.GetValue()
 		}
 		if flag.Name == "d" && len(flag.Values) != 0 {
 			bodyStr := flag.Values[0]
@@ -77,16 +77,16 @@ func Create(url string, flagArr []flags.Flag) *request {
 		}
 
 		if flag.Name == "u" && len(flag.Values) != 0 {
-			user = flag.Values[0]
+			user = flag.GetValue()
 		}
 		if flag.Name == "p" && len(flag.Values) != 0 {
-			password = flag.Values[0]
+			password = flag.GetValue()
 		}
 		if flag.Name == "E" && len(flag.Values) != 0 {
-			clientCertPath = flag.Values[0]
+			clientCertPath = flag.GetValue()
 		}
 		if flag.Name == "Y" && len(flag.Values) != 0 {
-			privateKeyPath = flag.Values[0]
+			privateKeyPath = flag.GetValue()
 		}
 	}
 	finalUrl := strings.Join(urlArr, "")
