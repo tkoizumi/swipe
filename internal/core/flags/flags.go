@@ -46,5 +46,8 @@ func (f *Flag) Parse(args []string) {
 }
 
 func (f Flag) GetValue() string {
+	if len(f.Values) == 0 {
+		return ""
+	}
 	return f.Values[0]
 }

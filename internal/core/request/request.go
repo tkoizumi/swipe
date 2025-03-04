@@ -38,7 +38,7 @@ func Create(url string, flagArr []flags.Flag) *request {
 	privateKeyPath := ""
 
 	for _, flag := range flagArr {
-		if flag.Name == "X" && len(flag.Values) != 0 {
+		if flag.Name == "X" {
 			method = flag.GetValue()
 		}
 		if flag.Name == "d" && len(flag.Values) != 0 {
@@ -76,16 +76,16 @@ func Create(url string, flagArr []flags.Flag) *request {
 			urlArr = urlArr[:len(urlArr)-1]
 		}
 
-		if flag.Name == "u" && len(flag.Values) != 0 {
+		if flag.Name == "u" {
 			user = flag.GetValue()
 		}
-		if flag.Name == "p" && len(flag.Values) != 0 {
+		if flag.Name == "p" {
 			password = flag.GetValue()
 		}
-		if flag.Name == "E" && len(flag.Values) != 0 {
+		if flag.Name == "E" {
 			clientCertPath = flag.GetValue()
 		}
-		if flag.Name == "Y" && len(flag.Values) != 0 {
+		if flag.Name == "Y" {
 			privateKeyPath = flag.GetValue()
 		}
 	}
