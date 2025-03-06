@@ -5,11 +5,12 @@
 ---
 
 ## Features
-- Specify HTTP methods with `-X` (e.g., GET, POST, DELETE).
-- Add custom headers using `-H`.
-- Include request data with `-d` for POST, PUT, or PATCH requests.
-- Download responses to a file using `-o`.
-- Add query parameters conveniently with `-q`.
+- Specify HTTP methods with `-X` (e.g., GET, POST, DELETE)
+- Add custom headers using `-H`
+- Include request data with `-d` for POST, PUT, or PATCH requests
+- Download responses to a file using `-o`
+- Add query parameters conveniently with `-q`
+- Transform JSON responses on the fly using `-P` with JQ syntax
 
 ---
 
