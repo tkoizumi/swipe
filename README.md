@@ -40,6 +40,10 @@
 ```sh
 swipe <URL> [flags]
 ```
+or
+```sh
+swipe [flags] <URL> 
+```
 
 ### Flags
 - `-X`: Specify the HTTP method (e.g., GET, POST, PUT, DELETE).
