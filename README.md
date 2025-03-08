@@ -51,6 +51,7 @@ swipe [flags] <URL>
 - `-d`: Provide request data (e.g., JSON body) for POST/PUT requests.
 - `-o`: Download the response body to a file. Specify the filename.
 - `-q`: Add query parameters in the format `key=value`. Repeatable for multiple parameters.
+- `-P`: Transform JSON response using JQ syntax.
 
 ---
 
