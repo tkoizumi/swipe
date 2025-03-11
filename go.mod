@@ -1,6 +1,6 @@
 module swipe
 
-go 1.22.3
+go 1.22
 
 require (
 	github.com/itchyny/gojq v0.12.17 // indirect
