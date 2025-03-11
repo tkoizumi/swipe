@@ -6,31 +6,26 @@ UTILS_FILE = $(CMD_DIR)/utils.go
 
 TARGET_DIR = $(HOME)/.local/bin
 INSTALL_DIR = $(TARGET_DIR)/$(BINARY_NAME)
-
-GO_VERSION = 1.22.3
-ARCH := $(shell uname -m)
-GO_URL := https://go.dev/dl/go$(GO_VERSION).darwin-$(if $(filter arm64,$(ARCH)),arm64,amd64).tar.gz
-GO_DIR = $(HOME)/.go
-GO_CMD = $(GO_DIR)/bin/go
+GO_VERSION := $(shell go version | cut -d ' ' -f 3 | sed 's/go//')
+GO_REQUIRED_VERSION := 1.22.3
 
 # Build and run the project
 all: ensure_go build install
 
 ensure_go:
-	@echo "Checking Go version..."
-	@if [ ! -x "$(GO_CMD)" ] || ! $(GO_CMD) version 2>/dev/null | grep -q "go$(GO_VERSION)"; then \
-		echo "Installing Go $(GO_VERSION) for $(ARCH)..."; \
-		rm -rf $(GO_DIR); \
-		mkdir -p $(GO_DIR); \
-		curl -sSL $(GO_URL) | tar -xz -C $(GO_DIR) --strip-components=1; \
+	@echo "Checking go version..."
+	@echo "CPU Architecture: $(shell uname -m)"
+	@echo "Current Go version: $(GO_VERSION)"
+	@if [ -n "$(GO_VERSION)" ]; then \
+			if [ "$(GO_VERSION)" = "$(GO_REQUIRED_VERSION)" ]; then \
+					echo "Go version is 1.22.3"; \
+			else \
+					echo "Go version is not 1.22.3. Please ensure Go version is exactly 1.22.3"; \
+			fi; \
+	else \
+			echo "Go is not installed or not in PATH. Please install Go."; \
 	fi
-	@echo "Go $(GO_VERSION) is installed at $(GO_CMD)."
-
-build: ensure_go
-	@echo "Building the project..."
-	mkdir -p $(BIN_DIR)
-	$(GO_CMD) build -o $(BIN_DIR)/$(BINARY_NAME) $(MAIN_FILE) $(UTILS_FILE)
-
+	
 build:
 	@echo "Building the project..."
 	mkdir -p $(BIN_DIR)
@@ -49,6 +44,5 @@ install: build
 	@echo "Installation complete"
 
 clean:
-	@echo "Cleaning up...
+	@echo "Cleaning up..."
 	rm -rf $(BIN_DIR)
-
