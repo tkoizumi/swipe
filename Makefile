@@ -8,19 +8,23 @@ TARGET_DIR = $(HOME)/.local/bin
 INSTALL_DIR = $(TARGET_DIR)/$(BINARY_NAME)
 
 GO_VERSION = 1.22.3
-GO_BIN = $(HOME)/.go/bin/go$(GO_VERSION)
-GO_CMD = $(HOME)/.go/bin/go
+ARCH := $(shell uname -m)
+GO_URL := https://go.dev/dl/go$(GO_VERSION).darwin-$(if $(filter arm64,$(ARCH)),arm64,amd64).tar.gz
+GO_DIR = $(HOME)/.go
+GO_CMD = $(GO_DIR)/bin/go
 
 # Build and run the project
 all: ensure_go build install
 
 ensure_go:
 	@echo "Checking Go version..."
-	@if ! $(GO_CMD) version 2>/dev/null | grep -q 'go$(GO_VERSION)'; then \
-		echo "Installing Go $(GO_VERSION)..."; \
-		mkdir -p $(HOME)/.go && curl -sSL https://go.dev/dl/go$(GO_VERSION).darwin-amd64.tar.gz | tar -xz -C $(HOME)/.go --strip-components=1; \
+	@if [ ! -x "$(GO_CMD)" ] || ! $(GO_CMD) version 2>/dev/null | grep -q "go$(GO_VERSION)"; then \
+		echo "Installing Go $(GO_VERSION) for $(ARCH)..."; \
+		rm -rf $(GO_DIR); \
+		mkdir -p $(GO_DIR); \
+		curl -sSL $(GO_URL) | tar -xz -C $(GO_DIR) --strip-components=1; \
 	fi
-	@echo "Go $(GO_VERSION) is installed."
+	@echo "Go $(GO_VERSION) is installed at $(GO_CMD)."
 
 build: ensure_go
 	@echo "Building the project..."
