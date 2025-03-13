@@ -22,7 +22,7 @@ ensure_go:
 					echo "Go version is 1.22.3"; \
 			else \
 					echo "Go version is not 1.22.3. Please ensure Go version is exactly 1.22.3"; \
-					curl -sSL https://go.dev/dl/go${GO_REQUIRED_VERSION}.darwin-amd64.tar.gz | tar -xz -C $HOME/.go --strip-components=1; \
+					curl -sSL https://go.dev/dl/go${GO_REQUIRED_VERSION}.darwin-amd64.tar.gz | tar -xz -C $(HOME)/.go --strip-components=1; \
 			fi; \
 	else \
 			echo "Go is not installed or not in PATH. Please install Go."; \
