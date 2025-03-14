@@ -56,6 +56,11 @@ swipe [flags] <URL>
 ---
 
 ## Examples
+### **GET Request**
+Fetch all posts from an API:
+```sh
+swipe https://jsonplaceholder.typicode.com/posts
+```
 
 ### **GET Request with Query Parameters**
 Fetch a specific post from an API:
