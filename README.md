@@ -46,7 +46,7 @@ swipe [flags] <URL>
 ```
 
 ### Flags
-- `-X`: Specify the HTTP method (e.g., GET, POST, PUT, DELETE).
+- `-X`: Specify the HTTP method (e.g., GET, POST, PUT, DELETE). By default, swipe uses GET if no method is specified.
 - `-H`: Add headers in the format `"Header-Name: value"`. Repeatable for multiple headers.
 - `-d`: Provide request data (e.g., JSON body) for POST/PUT requests.
 - `-o`: Download the response body to a file. Specify the filename.
