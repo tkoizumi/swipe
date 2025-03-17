@@ -1,6 +1,6 @@
 # Swipe: A Command-Line HTTP Client
 
-**Swipe** is a lightweight, fast, Go-based command-line HTTP client inspired by cURL. It allows you to perform HTTP requests and provides the added functionality of transforming responses using jq syntax, all without requiring additional tools.
+**Swipe** is a lightweight, fast, Go-based command-line HTTP client inspired by cURL and jq. It allows you to perform HTTP requests and provides the added functionality of transforming responses using jq syntax, all without requiring additional tools.
 
 ---
 
