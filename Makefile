@@ -7,7 +7,8 @@ UTILS_FILE = $(CMD_DIR)/utils.go
 TARGET_DIR = $(HOME)/.local/bin
 INSTALL_DIR = $(TARGET_DIR)/$(BINARY_NAME)
 GO_VERSION := $(shell go version | cut -d ' ' -f 3 | sed 's/go//')
-GO_REQUIRED_VERSION := 1.22.3
+GO_MAJOR_MINOR := $(shell echo $(GO_VERSION) | cut -d. -f1,2)
+GO_REQUIRED_VERSION := 1.22
 ARCH := $(shell uname -m)
 
 # Build and run the project
@@ -18,14 +19,13 @@ ensure_go:
 	@echo "CPU Architecture: $(ARCH)"
 	@echo "Current Go version: $(GO_VERSION)"
 	@if [ -n "$(GO_VERSION)" ]; then \
-			if [ "$(GO_VERSION)" = "$(GO_REQUIRED_VERSION)" ]; then \
-					echo "Go version is 1.22.3"; \
+			if awk 'BEGIN {exit !($(GO_MAJOR_MINOR) >= $(GO_REQUIRED_VERSION))}'; then \
+					echo "Go version is compatible"; \
 			else \
-					echo "Go version is not 1.22.3. Please ensure Go version is exactly 1.22.3"; \
-					mkdir -p $HOME/.go && mkdir -p ~/tmp  && curl -sSL -o ~/tmp/go.tar.gz https://go.dev/dl/go1.22.3.darwin-amd64.tar.gz -v && tar -xz -C $HOME/.go --strip-components=1 -f ~/tmp/go.tar.gz; \
+					echo "Go version must be at least 1.22. Please upgrade Go."; exit 1;\
 			fi; \
 	else \
-			echo "Go is not installed or not in PATH. Please install Go."; \
+			echo "Go is not installed or not in PATH. Please install Go."; exit 1;\
 	fi
 
 build:
