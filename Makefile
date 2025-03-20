@@ -4,7 +4,16 @@ CMD_DIR = cmd
 MAIN_FILE = $(CMD_DIR)/main.go
 UTILS_FILE = $(CMD_DIR)/utils.go
 
-TARGET_DIR = $(HOME)/.local/bin
+OS := $(shell lsb_release -si 2>/dev/null)
+
+ifeq ($(OS),Ubuntu)
+    TARGET_DIR := /usr/local/bin
+    $(info Running on Ubuntu)
+else
+    $(info Not Ubuntu)
+    TARGET_DIR := $(HOME)/.local/bin
+endif
+
 INSTALL_DIR = $(TARGET_DIR)/$(BINARY_NAME)
 GO_VERSION := $(shell go version | cut -d ' ' -f 3 | sed 's/go//')
 GO_MAJOR_MINOR := $(shell echo $(GO_VERSION) | cut -d. -f1,2)
