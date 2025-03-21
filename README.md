@@ -17,7 +17,7 @@
 ## Installation
 1. Clone the repository:
    ```sh
-   git clone https://github.com/your-repo/swipe.git
+   git clone https://github.com/tkoizumi/swipe
    ```
 2. Navigate to the project directory:
    ```sh
@@ -25,7 +25,7 @@
    ```
 3. Build the project:
    ```sh
-   go build -o swipe
+   make
    ```
 4. Add Swipe to your PATH (optional):
    ```sh
