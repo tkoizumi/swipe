@@ -38,8 +38,8 @@ func Create(url string, flagArr []flags.Flag) *request {
 	privateKeyPath := ""
 
 	for _, flag := range flagArr {
-		if flag.Name == "X" {
-			method = flag.GetValue()
+		if flag.Name == "X" && len(flag.Values) != 0 {
+			method = flag.Values[0]
 		}
 		if flag.Name == "d" && len(flag.Values) != 0 {
 			bodyStr := flag.Values[0]
@@ -134,7 +134,9 @@ func (r request) Do() (*http.Response, error) {
 
 	setHeaders(r.Headers, req)
 	req.SetBasicAuth(r.User, r.Password)
-	r.LoadClientCert()
+	if r.ClientCertPath != "" {
+		r.LoadClientCert()
+	}
 
 	client := &http.Client{
 		Transport: &http.Transport{
