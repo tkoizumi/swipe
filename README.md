@@ -15,6 +15,8 @@
 ---
 
 ## Installation
+Swipe requires **Go 1.22 or higher**.
+
 1. Clone the repository:
    ```sh
    git clone https://github.com/tkoizumi/swipe
